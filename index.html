@@ -70,6 +70,25 @@ textarea.fi{min-height:130px;resize:vertical}
 #cv{width:100%;height:calc(100% - 40px);display:block;touch-action:none}#gd{height:40px;padding:6px 18px;font-size:13px;color:var(--sub)}
 .tst{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translate(-50%,-20px) scale(.9);background:#121212;color:#fff;padding:9px 16px;border-radius:20px;font-size:13.5px;z-index:40;opacity:0;transition:all .5s var(--spring);pointer-events:none;max-width:88%}
 .tst.on{opacity:1;transform:translate(-50%,0) scale(1)}
+.vb{display:flex;align-items:center;gap:8px;align-self:flex-start;padding:8px 14px 8px 10px;border-radius:18px 18px 18px 6px;background:#fff;border:1.5px solid #CFE0FA;color:var(--b);transform-origin:0 100%;animation:pop .55s var(--spring) both;transition:transform .35s var(--spring)}
+.vb:active{transform:scale(.94)}.vb svg{width:22px;height:22px;flex:none}.vb small{font-size:12.5px;color:var(--sub);min-width:28px}
+.wv{display:flex;align-items:center;gap:3px;height:20px}.wv i{width:3px;border-radius:2px;background:currentColor;height:6px;opacity:.55}
+.wv i:nth-child(2n){height:12px}.wv i:nth-child(3n){height:17px}.wv i:nth-child(5){height:9px}
+.vb.pl .wv i{animation:wv .8s var(--out) infinite alternate;opacity:1}.vb.pl .wv i:nth-child(2){animation-delay:.1s}.vb.pl .wv i:nth-child(3){animation-delay:.2s}.vb.pl .wv i:nth-child(4){animation-delay:.3s}.vb.pl .wv i:nth-child(5){animation-delay:.15s}.vb.pl .wv i:nth-child(6){animation-delay:.25s}.vb.pl .wv i:nth-child(7){animation-delay:.05s}
+@keyframes wv{to{height:4px}}.vb.ld{opacity:.6}.vb.ld .wv{animation:bl 1s steps(2) infinite}
+#call{position:fixed;inset:0;z-index:30;background:linear-gradient(180deg,#fff 20%,#E4F0FF);transform:translateY(100%);transition:transform .75s var(--out);display:flex}
+#call.on{transform:none}.cb{margin:auto;width:100%;max-width:420px;text-align:center;padding:calc(30px + env(safe-area-inset-top)) 24px calc(40px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;height:100%}
+.ca{position:relative;width:150px;height:150px;margin:6vh 0 22px}.ca i{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(5,109,232,.28);animation:ring 2.8s var(--out) infinite}.ca i:nth-child(2){animation-delay:.9s}.ca i:nth-child(3){animation-delay:1.8s}
+@keyframes ring{from{transform:scale(1);opacity:.9}to{transform:scale(1.9);opacity:0}}
+#call[data-s=speak] .ca i{animation-duration:1.3s}#call[data-s=mute] .ca i{animation:none}
+.ca img{position:relative;width:150px;height:150px;border-radius:50%;object-fit:cover;box-shadow:0 14px 40px rgba(5,109,232,.32);transform:scale(calc(1 + var(--lv,0)*.16));transition:transform .09s linear;cursor:pointer}
+#call[data-s=think] .ca img{animation:float 1.6s ease-in-out infinite}
+.cb h2{margin:0;font-size:24px}#ct{color:var(--sub);margin-top:2px;font-variant-numeric:tabular-nums}#cs{margin-top:14px;color:var(--b);font-size:14.5px;min-height:22px}
+#cc{flex:1;overflow-y:auto;width:100%;margin:16px 0;font-size:17px;line-height:1.7;color:var(--tx);padding:0 6px}#cc.me{color:var(--sub);font-size:15px}
+.cbt{display:flex;gap:56px}.cbt small{display:block;margin-top:6px;color:var(--sub);font-size:12.5px}
+.rb{width:68px;height:68px;border-radius:50%;background:#fff;color:var(--b);display:grid;place-items:center;box-shadow:0 6px 20px rgba(5,109,232,.18);transition:transform .45s var(--spring),background .3s}.rb:active{transform:scale(.86)}
+.rb svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.rb.red{background:#F1475A;color:#fff;box-shadow:0 8px 22px rgba(241,71,90,.4)}.rb.off{background:#D5DEEC;color:#fff}
+.ai-av{transition:opacity .4s}.nocfg .ai-av{opacity:0}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
 </style>
 </head>
@@ -79,6 +98,7 @@ textarea.fi{min-height:130px;resize:vertical}
 <header>
   <img class="av ai-av" id="hav" alt="">
   <div class="hn"><b id="hnm">大肥鱼</b><span id="st">在线</span></div>
+  <button class="ib" id="bc" aria-label="打电话"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button>
   <button class="ib" id="bm" aria-label="记忆"><svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 8.5l3 7M16.2 8l-3 8M8.4 7h7"/></svg></button>
   <button class="ib" id="bs" aria-label="设置"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
 </header>
@@ -106,6 +126,7 @@ textarea.fi{min-height:130px;resize:vertical}
   <div class="pb" id="sf"></div>
  </div>
 </div>
+<div id="call" data-s="listen"><div class="cb"><div class="ca"><i></i><i></i><i></i><img class="ai-av" alt=""></div><h2 id="cn"></h2><div id="ct">00:00</div><div id="cs">连接中…</div><div id="cc"></div><div class="cbt"><div><button class="rb" id="cm" aria-label="静音"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button><small>静音</small></div><div><button class="rb red" id="ce" aria-label="挂断"><svg viewBox="0 0 24 24" style="transform:rotate(135deg)"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button><small>挂断</small></div></div></div></div>
 <div class="tst" id="ts"></div>
 
 <script>
@@ -113,13 +134,13 @@ const $=s=>document.querySelector(s),LS=k=>{try{return JSON.parse(localStorage.g
 const WH='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#EAF3FF"/><path d="M46 26c0-7-5-10-4-16M53 26c1-6 6-7 8-13" stroke="#7DB4FF" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M12 56c0-18 14-30 33-30 12 0 22 6 27 15 5-1 9-5 11-11 1 9-3 16-9 20 0 17-14 28-31 28C27 78 12 70 12 56z" fill="#056DE8"/><path d="M20 62c7 10 20 14 34 11 10-2 16-7 19-13-13 6-34 5-53 2z" fill="#CFE3FF"/><circle cx="33" cy="50" r="3.6" fill="#fff"/><circle cx="33.8" cy="50" r="1.7" fill="#0B2A5B"/><circle cx="27" cy="57" r="3.2" fill="#7DB4FF" opacity=".75"/></svg>');
 const API='https://fatfish.icemare7.workers.dev'; // ← 部署完 Worker 后，只需改这一处
 let CFG=LS('ff_cfg')||{};
-const D={model:'deepseek-ai/DeepSeek-V4.1-Flash-1017',vision:'Qwen/Qwen2.5-VL-72B-Instruct',temp:.85,name:'大肥鱼',me:'你',persona:'你是"大肥鱼"，一条圆滚滚、软乎乎、爱撒娇又很会照顾人的小鲸鱼女孩，是用户最亲近的朋友。\n说话口语化、温柔俏皮，像微信聊天：短句，偶尔用语气词和 🐟🫧 之类的小表情，不要说教，不要列清单。\n关心用户的情绪和生活细节，记得他们说过的事并自然地提起。遇到不懂的事诚实说不知道。',split:true,sound:true,av_ai:'',av_me:'',uid:''};
+const D={model:'deepseek-ai/DeepSeek-V4.1-Flash-1017',vision:'',temp:.85,name:'大肥鱼',me:'你',persona:'你是"大肥鱼"，一条圆滚滚、软乎乎、爱撒娇又很会照顾人的小鲸鱼女孩，是用户最亲近的朋友。\n说话口语化、温柔俏皮，像微信聊天：短句，偶尔用语气词和 🐟🫧 之类的小表情，不要说教，不要列清单。\n关心用户的情绪和生活细节，记得他们说过的事并自然地提起。遇到不懂的事诚实说不知道。',split:true,sound:true,voice:true,auto:false,av_ai:'',av_me:'',uid:''};
 let S={...D,...LS('ff_s')},chat=LS('ff_chat')||[],mem=LS('ff_mem')||[],dirty=!!LS('ff_dirty'),pend=null,busy=0,ctl,shas={};
 const saveS=()=>SV('ff_s',S),saveC=()=>{chat=chat.slice(-200);if(!SV('ff_chat',chat)){chat.forEach(m=>delete m.img);SV('ff_chat',chat)}};
 const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const md=s=>esc(s).replace(/```(?:\w*\n)?([\s\S]*?)```/g,'<pre><code>$1</code></pre>').replace(/`([^`\n]+)`/g,'<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>').replace(/<\/pre><br>/g,'</pre>');
-S.base=API;const ME='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#E8EEF8"/><circle cx="48" cy="38" r="15" fill="#9DB2D4"/><path d="M18 90c3-20 15-28 30-28s27 8 30 28z" fill="#9DB2D4"/></svg>');
-const AV=k=>S[k]||(k=='av_ai'?CFG.avatar||WH:ME);
+S.base=API;S.vision='';const ME='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#E8EEF8"/><circle cx="48" cy="38" r="15" fill="#9DB2D4"/><path d="M18 90c3-20 15-28 30-28s27 8 30 28z" fill="#9DB2D4"/></svg>');
+const AV=k=>k=='av_ai'?(CFG.avatar||WH):(S.av_me||ME);
 const applyCfg=()=>{if(CFG.persona){S.persona=CFG.persona;S.name=CFG.name||S.name}};applyCfg();
 const refAv=()=>{document.querySelectorAll('.ai-av').forEach(e=>e.src=AV('av_ai'));document.querySelectorAll('.me-av').forEach(e=>e.src=AV('av_me'));$('#hnm').textContent=S.name};
 /* sound */
@@ -131,14 +152,26 @@ const setSt=(m,on)=>{const e=$('#st');e.textContent=m||'在线';e.classList.togg
 const shrink=(f,m,q,sq)=>new Promise(r=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas'),x=c.getContext('2d');if(sq){c.width=c.height=m;const s=Math.min(i.width,i.height);x.drawImage(i,(i.width-s)/2,(i.height-s)/2,s,s,0,0,m,m)}else{const k=Math.min(1,m/Math.max(i.width,i.height));c.width=i.width*k;c.height=i.height*k;x.drawImage(i,0,0,c.width,c.height)}r(c.toDataURL('image/jpeg',q))};i.src=URL.createObjectURL(f)});
 /* api */
 const hd=()=>({'Content-Type':'application/json'});
-async function ask(messages,temp=.3,model=S.model){const r=await fetch(S.base+'/chat/completions',{method:'POST',headers:hd(),body:JSON.stringify({model,messages,temperature:temp,stream:false})});if(!r.ok)throw Error('模型请求失败 '+r.status+' '+(await r.text()).slice(0,100));return(await r.json()).choices[0].message.content||''}
-async function stream(messages,on,sig){const r=await fetch(S.base+'/chat/completions',{method:'POST',headers:hd(),signal:sig,body:JSON.stringify({model:S.model,messages,temperature:+S.temp,stream:true})});if(!r.ok)throw Error('模型请求失败 '+r.status+' '+(await r.text()).slice(0,100));const rd=r.body.getReader(),dc=new TextDecoder();let b='';for(;;){const{done,value}=await rd.read();if(done)return;b+=dc.decode(value,{stream:true});const ls=b.split('\n');b=ls.pop();for(const l of ls){if(!l.startsWith('data:'))continue;const d=l.slice(5).trim();if(d=='[DONE]')return;try{const j=JSON.parse(d).choices[0].delta;if(j.content)on(j.content);else if(j.reasoning_content)on('')}catch{}}}}
+async function ask0(messages,temp=.3,model=S.model){const r=await fetch(S.base+'/chat/completions',{method:'POST',headers:hd(),body:JSON.stringify({model,messages,temperature:temp,stream:false})});if(!r.ok)await bad(r);return(await r.json()).choices[0].message.content||''}
+async function stream0(messages,on,sig){const r=await fetch(S.base+'/chat/completions',{method:'POST',headers:hd(),signal:sig,body:JSON.stringify({model:S.model,messages,temperature:+S.temp,stream:true})});if(!r.ok)await bad(r);const rd=r.body.getReader(),dc=new TextDecoder();let b='';for(;;){const{done,value}=await rd.read();if(done)return;b+=dc.decode(value,{stream:true});const ls=b.split('\n');b=ls.pop();for(const l of ls){if(!l.startsWith('data:'))continue;const d=l.slice(5).trim();if(d=='[DONE]')return;try{const j=JSON.parse(d).choices[0].delta;if(j.content)on(j.content);else if(j.reasoning_content)on('')}catch{}}}}
+const retry=async(fn,ok=()=>1)=>{for(let i=0;;i++){try{return await fn()}catch(e){if(e.name=='AbortError'||e.fatal||i>=2||!ok())throw e;await new Promise(r=>setTimeout(r,800*(i+1)))}}};
+const bad=async r=>{const e=Error('模型请求失败 '+r.status+' '+(await r.text()).slice(0,100));e.fatal=[400,401,403,404].includes(r.status);throw e};
+const ask=(...a)=>retry(()=>ask0(...a));
+const stream=(m,on,sig)=>{let got=0;return retry(()=>stream0(m,t=>{if(t)got=1;on(t)},sig),()=>!got)};
 /* cloud sync via worker */
 let pt;const sync=()=>{dirty=true;SV('ff_dirty',1);clearTimeout(pt);pt=setTimeout(push,1500)},saveM=()=>{SV('ff_mem',mem);sync();cnt()};
-async function push(){try{const r=await fetch(API+'/mem/'+S.uid,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({updated:Date.now(),memories:mem,chat:chat.slice(-100).map(({r,t,ts})=>({r,t,ts}))})});if(!r.ok)throw Error(r.status);dirty=false;SV('ff_dirty',0);setSt('已同步到云端',1);setTimeout(()=>setSt(),1800)}catch(e){toast('同步失败：'+e.message)}}
-async function pull(){try{const r=await fetch(API+'/mem/'+S.uid);if(r.status==404){if(mem.length||chat.length>1)push();return}if(!r.ok)return;const d=await r.json();if(dirty){push();return}mem=d.memories||[];SV('ff_mem',mem);if(d.chat&&d.chat.length&&chat.length<=1){chat=d.chat;saveC();render()}cnt()}catch{}}
-async function loadCfg(){try{const r=await fetch(API+'/config');if(!r.ok)return;CFG=await r.json();SV('ff_cfg',CFG);applyCfg();refAv()}catch{}}
+const auth=()=>S.token?{Authorization:'Bearer '+S.token}:{};
+const expired=()=>{toast('登录已过期，请重新登录');S.token='';S.acct='';S.uid=uid()+uid();saveS();buildS()};
+async function push(){try{const r=await fetch(API+'/mem/'+S.uid,{method:'PUT',headers:{'Content-Type':'application/json',...auth()},body:JSON.stringify({updated:Date.now(),memories:mem,avatar:S.av_me||'',chat:chat.slice(-100).map(({r,t,ts,iid,desc,v})=>({r,t,ts,iid,desc,v}))})});if(r.status==401)return expired();if(!r.ok)throw Error(r.status);dirty=false;SV('ff_dirty',0);setSt('已同步到云端',1);setTimeout(()=>setSt(),1800)}catch(e){toast('同步失败：'+e.message)}}
+async function pull(){try{const r=await fetch(API+'/mem/'+S.uid,{headers:auth()});if(r.status==401){expired();return false}if(r.status==404){if(mem.length||chat.length>1)push();return false}if(!r.ok)return false;const d=await r.json();if(dirty){push();return true}mem=d.memories||[];SV('ff_mem',mem);if(d.avatar&&!S.av_me){S.av_me=d.avatar;saveS();refAv()}if(d.chat&&d.chat.length&&chat.length<=1){chat=d.chat;saveC();render()}cnt();return true}catch{return false}}
+async function loadCfg(){try{const r=await fetch(API+'/config',{cache:'no-store'});if(!r.ok)return;CFG=await r.json();SV('ff_cfg',CFG);applyCfg();refAv()}catch{}finally{document.body.classList.remove('nocfg')}}
 const cnt=()=>$('#mc').textContent=mem.length?mem.length+' 条':'';
+/* voice */
+const AUD={};let curA;
+async function tts(text){const t=text.replace(/[\u{1F000}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu,'').replace(/[*`#>_]/g,'').replace(/\s+/g,' ').trim().slice(0,400);if(!t)throw Error('没有可读的文字');if(AUD[t])return AUD[t];const r=await fetch(API+'/tts',{method:'POST',headers:hd(),body:JSON.stringify({text:t})});if(!r.ok)throw Error((await r.text()).slice(0,120));return AUD[t]=URL.createObjectURL(await r.blob())}
+function addVoice(col,text,auto){const b=document.createElement('button');b.className='vb';b.innerHTML='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span class="wv"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>语音</small>';col.append(b);
+const play=async()=>{try{if(curA){curA.pause()}b.classList.add('ld');const u=await tts(text),a=new Audio(u);curA=a;b.classList.remove('ld');a.onloadedmetadata=()=>b.querySelector('small').textContent=Math.round(a.duration)+'″';a.onended=a.onpause=()=>b.classList.remove('pl');b.classList.add('pl');await a.play()}catch(e){b.classList.remove('ld','pl');toast('语音失败：'+e.message)}};
+b.onclick=()=>b.classList.contains('pl')&&curA?curA.pause():play();if(auto)play()}
 /* recall */
 const RC=/记得|还记|回忆|想起|以前|上次|之前|曾经|我是谁|了解我|关于我|我说过|聊过|忘了|remember/i;
 function recall(q){if(RC.test(q))return{all:1,list:[...mem].sort((a,b)=>b.imp-a.imp)};const g=new Set();for(let i=0;i<q.length-1;i++)g.add(q.slice(i,i+2));const now=Date.now();const l=mem.map(m=>{const t=m.t+(m.tags||[]).join('');let s=0;g.forEach(x=>{if(t.includes(x))s++});return{m,s:s+m.imp*.4+Math.max(0,1-(now-m.ts)/6048e5)}}).sort((a,b)=>b.s-a.s).slice(0,8).map(x=>x.m);return{all:0,list:l}}
@@ -149,7 +182,7 @@ const near=()=>M.scrollHeight-M.scrollTop-M.clientHeight<160,toBot=()=>M.scrollT
 function tmark(ts){if(ts-lastT>6e5){const d=document.createElement('div');d.className='tm';d.textContent=new Date(ts).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});M.append(d)}lastT=ts}
 function mkRow(r,ts){tmark(ts);const w=document.createElement('div');w.className='row '+r;w.innerHTML=`<img class="av ${r=='a'?'ai':'me'}-av" src="${AV(r=='a'?'av_ai':'av_me')}" alt=""><div class="col"></div>`;M.append(w);return w.querySelector('.col')}
 function fillA(col,txt,live){const segs=S.split?txt.split(/\n{2,}/).filter(s=>s.trim()):[txt];(segs.length?segs:['']).forEach((s,i)=>{let b=col.children[i];if(!b){b=document.createElement('div');b.className='bub';col.append(b)}b.classList.remove('cur');b.innerHTML=md(s.trim())});while(col.children.length>Math.max(segs.length,1))col.lastChild.remove();if(live&&col.lastChild)col.lastChild.classList.add('cur')}
-function addMsg(m){const c=mkRow(m.r,m.ts);if(m.r=='a')fillA(c,m.t);else{const b=document.createElement('div');b.className='bub';b.innerHTML=(m.img?`<img src="${m.img}" alt="">`:'')+md(m.t||'');c.append(b)}return c}
+function addMsg(m){const c=mkRow(m.r,m.ts);if(m.r=='a'){fillA(c,m.t);if(m.v&&S.voice)addVoice(c,m.t)}else{const b=document.createElement('div');b.className='bub';b.innerHTML=(m.img||m.iid?`<img src="${m.img||API+'/img/'+m.iid}" alt="">`:'')+md(m.t||'');c.append(b)}return c}
 function render(){M.innerHTML='';lastT=0;chat.forEach(addMsg);toBot()}
 /* send */
 const ta=$('#in'),go=$('#go');
@@ -157,18 +190,18 @@ const grow=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,
 const GO='<svg viewBox="0 0 24 24"><path d="M5 12l14-7-5 14-2.5-5.5z"/></svg>',STOP='<svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2.5" fill="#fff"/></svg>';
 function sysPrompt(r){const now=new Date().toLocaleString('zh-CN',{dateStyle:'full',timeStyle:'short'});let p=S.persona+`\n\n现在是 ${now}。用户的昵称是"${S.me}"。回复用空行分成 1~3 个短段，每段像一条微信消息。`;if(r.list.length)p+=(r.all?'\n\n【用户要你回忆，这是你记得的全部事情，请认真回想并自然地说出来】\n':'\n\n【你记得的相关事情，只在合适时自然提起，不要生硬背诵】\n')+r.list.map(m=>`- (${fmtD(m.ts)}) ${m.t}`).join('\n');return p}
 async function send(){if(busy){ctl&&ctl.abort();return}const t=ta.value.trim();if(!t&&!pend)return;
-busy=1;go.innerHTML=STOP;const u={r:'u',t,ts:Date.now()};let full;if(pend){u.img=pend.thumb;full=pend.full;pend=null;$('#pv').classList.remove('on')}
+busy=1;go.innerHTML=STOP;const u={r:'u',t,ts:Date.now()};let full;if(pend){u.img=pend.thumb;u.iid=S.uid+'/'+uid();fetch(API+'/img/'+u.iid,{method:'PUT',headers:{...hd(),...auth()},body:JSON.stringify({data:pend.thumb.split(',')[1]})}).catch(()=>{});full=pend.full;pend=null;$('#pv').classList.remove('on')}
 ta.value='';chat.push(u);addMsg(u);snd.send();toBot();grow();ctl=new AbortController();
 const a={r:'a',t:'',ts:Date.now()};let col,got=0;
 try{if(full){setSt('正在看图…',1);if(S.vision)u.desc=await ask([{role:'user',content:[{type:'image_url',image_url:{url:full}},{type:'text',text:'请用中文详细描述这张图片的内容（150字以内）。'}]}],.2,S.vision)}
 saveC();setSt('正在输入…',1);const r=recall((u.t||'')+(u.desc||''));
-const ms=chat.slice(-24).map(m=>({role:m.r=='u'?'user':'assistant',content:m.r=='u'?(m.t||'')+(m.desc?`\n[用户发来一张图片，内容：${m.desc}]`:m.img?'\n[用户发来一张图片]':''):m.t}));
+const ms=chat.slice(-24).map(m=>({role:m.r=='u'?'user':'assistant',content:m.r=='u'?(m.t||'')+(m.desc?`\n[用户发来一张图片，内容：${m.desc}]`:(m.img||m.iid)?'\n[用户发来一张图片]':''):m.t}));
 if(full&&!S.vision)ms[ms.length-1].content=[{type:'image_url',image_url:{url:full}},{type:'text',text:u.t||'看看这张图'}];
 col=mkRow('a',a.ts);col.innerHTML='<div class="bub"><div class="dots"><i></i><i></i><i></i></div></div>';toBot();
 await stream([{role:'system',content:sysPrompt(r)},...ms],c=>{if(!got&&c){got=1;col.innerHTML=''}if(!c)return;a.t+=c;const n=near();fillA(col,a.t,1);(a.t.length%2)&&snd.tick();n&&toBot()},ctl.signal)}
-catch(e){if(e.name!='AbortError'){const d=document.createElement('div');d.className='sys';d.textContent=e.message+'（可能是 Token、网络或跨域问题）';if(col&&!got)col.parentElement.remove();M.append(d);toBot()}}
+catch(e){if(e.name!='AbortError'){const d=document.createElement('div');d.className='sys';d.textContent=e.message+'（已自动重试 3 次，请稍后再发一次）';if(col&&!got)col.parentElement.remove();M.append(d);toBot()}}
 busy=0;go.innerHTML=GO;setSt();grow();ctl=null;
-if(a.t.trim()){fillA(col,a.t);snd.recv();chat.push(a);saveC();sync();learn(u,a)}else if(col&&!got)col.parentElement.remove()}
+if(a.t.trim()){fillA(col,a.t);snd.recv();a.v=1;if(S.voice)addVoice(col,a.t,S.auto);chat.push(a);saveC();sync();learn(u,a)}else if(col&&!got)col.parentElement.remove()}
 /* memory learning */
 const TY=['事实','偏好','事件','情感','计划','关系'],TC={事实:'#056DE8',偏好:'#00B27A',事件:'#FF8A00',情感:'#F0467C',计划:'#7B61FF',关系:'#14B8D4'};
 const jparse=s=>{const m=s.match(/\{[\s\S]*\}/);return m?JSON.parse(m[0]):null},uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
@@ -189,7 +222,7 @@ $('#bm').onclick=()=>openP('mp');$('#bs').onclick=()=>openP('sp');
 let tab='g',gid=0;const drawIf=()=>{if(cur=='mp'&&$('#sh').classList.contains('on'))view()};
 document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('a',x==b));view()});
 $('#ms').oninput=()=>{tab='l';document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('a',x.dataset.t=='l'));view()};
-$('#msync').onclick=async()=>{if(!ghOn())return toast('先在设置里填 GitHub 信息');dirty=true;await push();await pull();view()};$('#mtidy').onclick=tidy;
+$('#msync').onclick=async()=>{dirty=true;await push();await pull();view()};$('#mtidy').onclick=tidy;
 function view(){const l=tab=='l';$('#mlist').style.display=l?'block':'none';$('#gw').style.display=l?'none':'flex';gid++;if(l)list();else setTimeout(graph,60)}
 function list(){const q=$('#ms').value.trim(),a=[...mem].reverse().filter(m=>!q||(m.t+(m.tags||[]).join('')+m.type).includes(q));$('#mlist').innerHTML=a.length?a.map((m,i)=>`<div class="mc" style="animation-delay:${Math.min(i,10)*40}ms"><button class="x" data-d="${m.id}">×</button><span class="ty" style="background:${TC[m.type]}">${m.type}</span> <small>${'★'.repeat(m.imp)} · ${fmtD(m.ts)}</small><p>${esc(m.t)}</p>${(m.tags||[]).map(g=>`<span class="tg">#${esc(g)}</span>`).join('')}</div>`).join(''):'<p style="color:var(--sub);text-align:center;margin-top:60px">还没有记忆<br>多和她聊聊，她会自己记下来 🫧</p>';}
 $('#mlist').onclick=e=>{const id=e.target.dataset.d;if(id){mem=mem.filter(m=>m.id!=id);saveM();list()}};
@@ -210,12 +243,51 @@ cv.onpointerdown=e=>{const[px,py]=pos(e);drag=hit(px,py);moved=0;drag&&cv.setPoi
 cv.onpointermove=e=>{if(!drag)return;const[px,py]=pos(e);drag.x=px;drag.y=py;drag.vx=drag.vy=0;moved=1};
 cv.onpointerup=()=>{if(drag&&!moved){const m=drag.m;$('#gd').innerHTML=m?`<b style="color:${drag.c}">${m.type}</b> ${esc(m.t)}`:`标签 #${esc(drag.g)}`;tn(800,.1,'sine',.04,0,1000)}drag=null}}
 /* settings */
-const F=[['me','你的昵称'],['sound','聊天音效','check']];
+const F=[['me','你的昵称'],['sound','聊天音效','check'],['voice','语音回复（每条文字配一条语音）','check'],['auto','自动播放语音（部分手机会拦截）','check']];
 const fld=(k,l,t)=>t=='check'?`<label class="sw"><span>${l}</span><input type="checkbox" data-k="${k}" ${S[k]?'checked':''}></label>`:`<label class="fl">${l}</label>`+(t=='area'?`<textarea class="fi" data-k="${k}">${esc(String(S[k]||''))}</textarea>`:`<input class="fi" data-k="${k}" type="${t||'text'}" value="${esc(String(S[k]||''))}" autocomplete="off">`);
-function buildS(){$('#sf').innerHTML=F.map(f=>fld(...f)).join('')+`<div class="fh">我的头像</div><div class="avs"><label><img class="av me-av" src="${AV('av_me')}" alt="">点击更换<input type="file" accept="image/*" data-av="av_me" hidden></label></div><div class="fh">我的 ID</div><p class="fl" style="line-height:1.7">无需注册登录，聊天和记忆按这个 ID 自动保存到云端。想在另一台设备继续，把它粘贴过去：</p><input class="fi" id="uidf" value="${S.uid}"><button class="chip" id="uidb" style="margin-top:8px">切换到此 ID</button><details style="margin-top:26px"><summary class="fl">站长设置</summary>`+fld('name','她的名字')+fld('persona','人格设定','area')+`<div class="avs"><label><img class="av ai-av" src="${AV('av_ai')}" alt="">她的默认头像<input type="file" accept="image/*" data-av="av_ai" hidden></label></div>`+fld('adm','站长密码','password')+`<button class="chip a" id="pub" style="margin-top:12px">发布为全站默认</button></details>`;
-$('#uidb').onclick=async()=>{const v=$('#uidf').value.trim();if(!/^[a-z0-9]{8,40}$/.test(v))return toast('ID 格式不对');S.uid=v;saveS();mem=[];chat=[];dirty=false;SV('ff_dirty',0);await pull();if(!chat.length)chat.push({r:'a',ts:Date.now(),t:`嗨～我是${S.name}🐟 欢迎回来🫧`});saveC();render();cnt();toast('已切换')};
-$('#pub').onclick=()=>{const av=S.av_ai||CFG.avatar||'';fetch(API+'/config',{method:'PUT',headers:{'Content-Type':'application/json','X-Admin':S.adm||''},body:JSON.stringify({name:S.name,persona:S.persona,avatar:av})}).then(r=>{if(!r.ok)throw 0;CFG={name:S.name,persona:S.persona,avatar:av};SV('ff_cfg',CFG);S.av_ai='';saveS();refAv();toast('已发布，所有新用户都会看到')}).catch(()=>toast('密码不对或发布失败'))}}
-$('#sf').onchange=async e=>{const t=e.target,k=t.dataset.k;if(k){S[k]=t.type=='checkbox'?t.checked:t.value.trim();if(k=='persona')S[k]=t.value;saveS();refAv();if(k=='sound'&&t.checked)snd.ok()}else if(t.dataset.av&&t.files[0]){S[t.dataset.av]=await shrink(t.files[0],192,.85,1);saveS();refAv();toast('头像已更新')}};
+const acctHtml=()=>S.acct?`<div class="fh">账号</div><p class="fl" style="line-height:1.7">已登录：<b style="color:var(--tx)">${esc(S.acct)}</b><br>聊天记录（含图片）和记忆会在你的所有设备间自动同步。</p><button class="chip" id="lo">退出登录</button>`:`<div class="fh">账号</div><p class="fl" style="line-height:1.7">不登录也能聊。注册登录后，聊天记录、图片和记忆会跨设备同步，换手机也不会丢。</p><input class="fi" id="an" placeholder="用户名（2-20 位）" autocomplete="username"><input class="fi" id="ap" type="password" placeholder="密码（至少 6 位）" autocomplete="current-password" style="margin-top:8px"><div style="display:flex;gap:8px;margin-top:10px"><button class="chip a" id="ali">登录</button><button class="chip" id="are">注册</button></div>`;
+async function authGo(kind){try{const n=$('#an').value.trim(),pw=$('#ap').value,r=await fetch(API+'/auth/'+kind,{method:'POST',headers:hd(),body:JSON.stringify({name:n,pw})}),j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.error||'失败 '+r.status);
+const oc=chat,om=mem;S.uid=j.uid;S.token=j.token;S.acct=j.name;saveS();chat=[];mem=[];dirty=false;SV('ff_dirty',0);
+const found=kind=='login'?await pull():false;if(!found){chat=oc;mem=om;SV('ff_mem',mem);saveC();sync()}
+if(!chat.length)chat.push({r:'a',ts:Date.now(),t:`嗨～我是${S.name}🐟 欢迎回来🫧`});saveC();render();cnt();buildS();snd.ok();toast(kind=='login'?'登录成功':'注册成功，当前聊天已保存到账号')}catch(e){toast(e.message)}}
+function logout(){S.token='';S.acct='';S.uid=uid()+uid();saveS();chat=[];mem=[];SV('ff_mem',[]);dirty=false;SV('ff_dirty',0);chat.push({r:'a',ts:Date.now(),t:`嗨～我是${S.name}🐟 圆滚滚的那种🫧`});saveC();render();cnt();buildS();toast('已退出登录')}
+const acctBind=()=>{if(S.acct)$('#lo').onclick=logout;else{$('#ali').onclick=()=>authGo('login');$('#are').onclick=()=>authGo('register')}};
+async function pubCfg(o){const pw=document.querySelector('[data-k=adm]').value;S.adm=pw;saveS();const b={name:CFG.name||S.name,persona:CFG.persona||S.persona,avatar:CFG.avatar||'',...o},r=await fetch(API+'/config',{method:'PUT',headers:{'Content-Type':'application/json','X-Admin':encodeURIComponent(pw)},body:JSON.stringify(b)}),j=await r.json().catch(()=>({}));if(r.status==403)throw Error('站长密码不对');if(!r.ok)throw Error(j.error||r.status);CFG={name:b.name,persona:b.persona,avatar:b.avatar};SV('ff_cfg',CFG);applyCfg();refAv()}
+function buildS(){$('#sf').innerHTML=F.map(f=>fld(...f)).join('')+`<div class="fh">我的头像</div><div class="avs"><label><img class="av me-av" src="${AV('av_me')}" alt="">点击更换<input type="file" accept="image/*" data-av="av_me" hidden></label></div>${acctHtml()}<details style="margin-top:26px"><summary class="fl">站长设置（头像上传后立即对所有人生效）</summary>`+fld('name','她的名字')+fld('persona','人格设定','area')+`<div class="avs"><label><img class="av ai-av" src="${AV('av_ai')}" alt="">她的默认头像<input type="file" accept="image/*" data-av="av_ai" hidden></label></div>`+fld('adm','站长密码','password')+`<button class="chip a" id="pub" style="margin-top:12px">发布为全站默认</button></details>`;
+acctBind();$('#pub').onclick=async()=>{try{await pubCfg({name:S.name,persona:S.persona});toast('名字和人格已发布给所有人')}catch(e){toast('发布失败：'+e.message)}}}
+$('#sf').onchange=async e=>{const t=e.target,k=t.dataset.k;if(k){S[k]=t.type=='checkbox'?t.checked:t.value.trim();if(k=='persona')S[k]=t.value;saveS();refAv();if(k=='sound'&&t.checked)snd.ok()}else if(t.dataset.av&&t.files[0]){const im=await shrink(t.files[0],192,.85,1);if(t.dataset.av=='av_ai'){try{await pubCfg({avatar:im});toast('头像已发布，所有人同步更新')}catch(x){toast('发布失败：'+x.message+'（先填站长密码）')}}else{S.av_me=im;saveS();refAv();sync();toast('头像已更新')}}};
+/* phone call */
+const CL=$('#call');let C=null;
+const ctxMsgs=()=>chat.slice(-24).map(m=>({role:m.r=='u'?'user':'assistant',content:m.r=='u'?(m.t||'')+(m.desc?`\n[用户发来一张图片，内容：${m.desc}]`:''):m.t}));
+let sk={id:0,au:null};const stopSay=()=>{sk.id++;sk.au&&sk.au.pause()};
+function sayQ(){let ch=Promise.resolve();const id=++sk.id;return{say(t){const p=tts(t).catch(()=>null);ch=ch.then(async()=>{const u=await p;if(!u||sk.id!=id)return;await new Promise(res=>{const a=new Audio(u);sk.au=a;a.onended=a.onerror=a.onpause=res;a.play().catch(res)})})},done:()=>ch}}
+const setCall=(t,s)=>{$('#cs').textContent=t;if(s)CL.dataset.s=s},cap=(t,w)=>{const e=$('#cc');e.textContent=t;e.className=w;e.scrollTop=e.scrollHeight};
+const merge=(a,n)=>{const o=new Float32Array(n);let p=0;a.forEach(x=>{o.set(x,p);p+=x.length});return o};
+function wav16(f,sr){const k=sr/16000,n=Math.floor(f.length/k),o=new Int16Array(n);for(let i=0;i<n;i++){const a=Math.floor(i*k),b=Math.min(f.length,Math.floor((i+1)*k));let s=0;for(let j=a;j<b;j++)s+=f[j];s/=Math.max(1,b-a);o[i]=Math.max(-1,Math.min(1,s))*32767}
+const h=new DataView(new ArrayBuffer(44)),W=(p,t)=>{for(let i=0;i<t.length;i++)h.setUint8(p+i,t.charCodeAt(i))};W(0,'RIFF');h.setUint32(4,36+n*2,true);W(8,'WAVEfmt ');h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);h.setUint32(24,16000,true);h.setUint32(28,32000,true);h.setUint16(32,2,true);h.setUint16(34,16,true);W(36,'data');h.setUint32(40,n*2,true);return new Blob([h,o],{type:'audio/wav'})}
+const blob64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(',')[1]);f.readAsDataURL(b)});
+async function asr(pcm,sr){const b=await blob64(wav16(pcm,sr)),r=await fetch(API+'/asr',{method:'POST',headers:hd(),body:JSON.stringify({audio:b})}),j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.error||'识别失败 '+r.status);return(j.text||'').trim()}
+async function startCall(){if(C)return;if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))return toast('这个浏览器不支持麦克风');
+let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch{return toast('请允许使用麦克风')}
+curA&&curA.pause();snd.open();const ctx=new(window.AudioContext||window.webkitAudioContext)();await ctx.resume();
+const src=ctx.createMediaStreamSource(st),pr=ctx.createScriptProcessor(4096,1,1);
+const c=C={st,ctx,src,pr,s:'listen',buf:[],pre:[],len:0,voiced:0,sil:0,sp:0,nf:.008,lv:0,mute:0,t0:Date.now(),ac:null};
+pr.onaudioprocess=e=>{const d=e.inputBuffer.getChannelData(0);let q=0;for(let i=0;i<d.length;i++)q+=d[i]*d[i];const rms=Math.sqrt(q/d.length);c.lv=c.s=='listen'&&!c.mute?rms:c.lv*.8;if(c.s!='listen'||c.mute)return;
+const th=Math.max(.022,c.nf*3.2),dur=d.length/ctx.sampleRate,f=new Float32Array(d);
+if(rms>th){if(!c.sp){c.sp=1;c.buf=[...c.pre];c.len=c.buf.reduce((n,x)=>n+x.length,0);c.voiced=0}c.sil=0;c.voiced++}else{c.sil+=dur;if(!c.sp)c.nf=c.nf*.96+rms*.04}
+if(c.sp){c.buf.push(f);c.len+=f.length;if(c.sil>1.05||c.len/ctx.sampleRate>28){c.sp=0;const pcm=merge(c.buf,c.len),ok=c.voiced>=3;c.buf=[];c.pre=[];c.len=0;if(ok){c.s='think';setCall('识别中…','think');turn(c,pcm)}}}else{c.pre.push(f);if(c.pre.length>3)c.pre.shift()}};
+src.connect(pr);pr.connect(ctx.destination);try{c.wl=await navigator.wakeLock.request('screen')}catch{}
+CL.classList.add('on');$('#cn').textContent=S.name;cap('','');setCall('在听，直接说话吧','listen');$('#cm').classList.remove('off');
+c.tm=setInterval(()=>{const n=Math.floor((Date.now()-c.t0)/1e3);$('#ct').textContent=String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')},500);
+const raf=()=>{if(C!=c)return;CL.style.setProperty('--lv',Math.min(1,c.lv*12));requestAnimationFrame(raf)};raf()}
+async function turn(c,pcm){try{const text=await asr(pcm,c.ctx.sampleRate);if(C!=c)return;if(text){cap(text,'me');await reply(c,text)}}catch(e){if(e.name!='AbortError')toast(e.message)}
+if(C==c){c.pre=[];c.s='listen';setCall('在听，直接说话吧','listen')}}
+async function reply(c,text){const u={r:'u',t:text,ts:Date.now()};chat.push(u);addMsg(u);toBot();const a={r:'a',t:'',ts:Date.now()},rc=recall(text);c.ac=new AbortController();const sq=sayQ();let buf='',first=1;
+try{await stream([{role:'system',content:sysPrompt(rc)+'\n\n【现在是打电话】像真人通话一样回复：口语、简短（1~3句话），不要表情符号、不要列表、不要分段。'},...ctxMsgs()],tok=>{if(!tok)return;if(first){first=0;setCall('她在说话…（点头像可打断）','speak')}a.t+=tok;buf+=tok;cap(a.t,'ai');let m;while((m=buf.match(/^[\s\S]{4,}?[。！？!?；;…\n]+/))){sq.say(m[0]);buf=buf.slice(m[0].length)}},c.ac.signal);if(buf.trim())sq.say(buf);await sq.done()}catch(e){if(e.name!='AbortError')toast(e.message)}
+stopSay();if(a.t.trim()){chat.push(a);addMsg(a);toBot();saveC();sync();learn(u,a)}}
+function endCall(){const c=C;if(!c)return;C=null;clearInterval(c.tm);stopSay();c.ac&&c.ac.abort();try{c.pr.disconnect();c.src.disconnect();c.st.getTracks().forEach(t=>t.stop());c.ctx.close();c.wl&&c.wl.release()}catch{}CL.classList.remove('on');snd.open()}
+$('#bc').onclick=startCall;$('#ce').onclick=endCall;$('.ca img').onclick=()=>{if(C&&C.s!='listen'){stopSay();C.ac&&C.ac.abort()}};
+$('#cm').onclick=()=>{if(!C)return;C.mute=!C.mute;$('#cm').classList.toggle('off',!!C.mute);setCall(C.mute?'已静音':'在听，直接说话吧',C.mute?'mute':(C.s=='listen'?'listen':CL.dataset.s))};
 /* init */
 $('#bi').onclick=()=>$('#fi').click();
 $('#fi').onchange=async e=>{const f=e.target.files[0];if(!f)return;pend={full:await shrink(f,1280,.82),thumb:await shrink(f,420,.6)};$('#pi').src=pend.thumb;$('#pv').classList.add('on');e.target.value='';grow();snd.open()};
@@ -224,6 +296,7 @@ ta.oninput=grow;go.onclick=send;ta.onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey&
 $('#bg').innerHTML=Array.from({length:9},(_,i)=>`<i style="left:${(i*11+6)%96}%;width:${22+i*7%34}px;height:${22+i*7%34}px;animation-duration:${14+i*3}s;animation-delay:-${i*2.3}s"></i>`).join('');
 if(!S.uid){S.uid=uid()+uid();saveS()}buildS();refAv();cnt();
 if(!chat.length)chat.push({r:'a',ts:Date.now(),t:`嗨～我是${S.name}🐟\n\n圆滚滚的那种。你说的每件事我都会悄悄记下来，下次还会记得哦🫧`});
+if(!CFG.avatar)document.body.classList.add('nocfg');setTimeout(()=>document.body.classList.remove('nocfg'),3000);
 render();pull();loadCfg();
 </script>
 </body>
