@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>登录 · 大肥鱼</title>
+<style>
+:root{--b:#056DE8;--b2:#2F8BFF;--bg:#fff;--tx:#121212;--sub:#8590A6;--line:#E6EDF7;--soft:#F2F7FF;--sp:cubic-bezier(.34,1.56,.64,1);--out:cubic-bezier(.16,1,.3,1)}
+@media(prefers-color-scheme:dark){:root{--bg:#0F141B;--tx:#E8EDF5;--sub:#8F9BB0;--line:#263043;--soft:#1A2230;--b:#2F8BFF;--b2:#5AA2FF}}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;background:var(--bg);color:var(--tx);font:15px/1.6 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bg i{position:fixed;bottom:-60px;border-radius:50%;border:1.5px solid rgba(5,109,232,.16);background:radial-gradient(circle at 30% 30%,rgba(47,139,255,.16),transparent 65%);animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-120vh) translateX(20px)}}
+.box{width:290px;text-align:center;position:relative;animation:in .9s var(--out) both}
+@keyframes in{from{opacity:0;transform:translateY(26px)}}
+.av{width:100px;height:100px;border-radius:50%;object-fit:cover;box-shadow:0 14px 34px rgba(5,109,232,.32);animation:fl 4s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-5px) rotate(-3deg)}}
+h1{font-size:23px;margin:16px 0 2px}p.s{color:var(--sub);margin:0 0 22px;font-size:13px}
+input{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font:16px/1.4 inherit;font-family:inherit;background:var(--bg);color:var(--tx);outline:0;margin-bottom:10px;transition:border-color .25s,box-shadow .35s}
+input:focus{border-color:var(--b2);box-shadow:0 0 0 4px rgba(5,109,232,.12)}
+button{font:inherit;border:0;cursor:pointer;transition:transform .45s var(--sp),opacity .2s}
+button:active{transform:scale(.94)}
+.pri{width:100%;padding:12px;border-radius:14px;background:linear-gradient(135deg,var(--b2),var(--b));color:#fff;font-weight:600;box-shadow:0 8px 20px rgba(5,109,232,.3);margin-top:4px}
+.row{display:flex;gap:10px;margin-top:10px}.row button{flex:1;padding:10px;border-radius:14px;background:var(--soft);color:var(--b)}
+.g{margin-top:16px;background:none;color:var(--sub);font-size:13px;text-decoration:underline}
+#e{min-height:22px;margin-top:10px;color:#E5484D;font-size:13px}.shake{animation:sh .4s}
+@keyframes sh{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.ld{opacity:.6;pointer-events:none}
+</style></head>
+<body>
+<div class="bg" id="bg"></div>
+<div class="box" id="bx">
+  <img class="av" id="av" alt="">
+  <h1 id="nm">大肥鱼</h1>
+  <p class="s">登录后，聊天记录和记忆会和手机、网页版同步</p>
+  <input id="u" placeholder="用户名" autocomplete="username">
+  <input id="p" type="password" placeholder="密码" autocomplete="current-password">
+  <button class="pri" id="li">登录</button>
+  <div class="row"><button id="re">注册新账号</button></div>
+  <div id="e"></div>
+  <button class="g" id="gu">先不登录，游客使用</button>
+</div>
+<script>
+const WH="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23EAF3FF'/%3E%3Cpath d='M46 26c0-7-5-10-4-16M53 26c1-6 6-7 8-13' stroke='%237DB4FF' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 56c0-18 14-30 33-30 12 0 22 6 27 15 5-1 9-5 11-11 1 9-3 16-9 20 0 17-14 28-31 28C27 78 12 70 12 56z' fill='%23056DE8'/%3E%3Cpath d='M20 62c7 10 20 14 34 11 10-2 16-7 19-13-13 6-34 5-53 2z' fill='%23CFE3FF'/%3E%3Ccircle cx='33' cy='50' r='3.6' fill='%23fff'/%3E%3Ccircle cx='33.8' cy='50' r='1.7' fill='%230B2A5B'/%3E%3Ccircle cx='27' cy='57' r='3.2' fill='%237DB4FF' opacity='.75'/%3E%3C/svg%3E";
+const $=id=>document.getElementById(id);
+$('av').src=WH;
+ui.cfg().then(c=>{if(c&&c.avatar)$('av').src=c.avatar;if(c&&c.name)$('nm').textContent=c.name}).catch(()=>{});
+$('bg').innerHTML=Array.from({length:7},(_,i)=>`<i style="left:${(i*15+5)%95}%;width:${22+i*8%30}px;height:${22+i*8%30}px;animation-duration:${14+i*3}s;animation-delay:-${i*2.4}s"></i>`).join('');
+async function go(kind){
+  const n=$('u').value.trim(),p=$('p').value;
+  $('bx').classList.add('ld');$('e').textContent='';
+  const r=await ui.login(kind,n,p);
+  $('bx').classList.remove('ld');
+  if(r&&r.error){$('e').textContent=r.error;$('e').classList.remove('shake');void $('e').offsetWidth;$('e').classList.add('shake')}
+}
+$('li').onclick=()=>go('login');$('re').onclick=()=>go('register');$('gu').onclick=()=>ui.guest();
+addEventListener('keydown',e=>{if(e.key==='Enter')go('login')});
+</script></body></html>

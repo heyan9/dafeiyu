@@ -1,0 +1,17 @@
+{
+  "name": "fatfish-desktop",
+  "version": "2.0.0",
+  "description": "大肥鱼桌面悬浮球",
+  "author": "fatfish",
+  "main": "main.js",
+  "scripts": { "start": "electron .", "dist": "electron-builder" },
+  "devDependencies": { "electron": "^33.0.0", "electron-builder": "^25.0.0" },
+  "build": {
+    "appId": "com.fatfish.desktop",
+    "productName": "大肥鱼",
+    "artifactName": "FatFish-${os}-${arch}.${ext}",
+    "files": ["main.js", "preload.js", "ui.js", "login.html", "orb.html", "config.json", "icon.png"],
+    "win": { "target": "nsis", "icon": "icon.png" },
+    "mac": { "target": "dmg", "icon": "icon.png", "category": "public.app-category.lifestyle" }
+  }
+}
