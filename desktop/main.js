@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, dialog, desktopCapturer, session, nativeImage, screen, shell, clipboard } = require('electron');
+const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, dialog, desktopCapturer, session, nativeImage, screen, shell, clipboard, net } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -10,16 +10,17 @@ const U = (f) => path.join(app.getPath('userData'), f);
 const rd = (f, d) => { try { return JSON.parse(fs.readFileSync(U(f), 'utf8')); } catch { return d; } };
 const wr = (f, v) => { try { fs.writeFileSync(U(f), JSON.stringify(v)); } catch {} };
 const icon = nativeImage.createFromPath(path.join(__dirname, 'icon.png'));
-const ORB = 76;
 
 let acct = rd('account.json', null);                       // 登录信息 {uid, token, acct}
 let prefs = { w: 420, h: 680, top: true, orb: null, guest: false, ...rd('prefs.json', {}) };
 const savePrefs = () => wr('prefs.json', prefs);
+let ORB = Math.max(36, Math.min(160, prefs.orbSize || 64));
 let loginWin, orb, chat, tray, quitting = false;
 
 if (!app.requestSingleInstanceLock()) app.quit();
 const fromSite = (e) => { try { return new URL(e.senderFrame.url).origin === ORIGIN; } catch { return false; } };
 const fromLocal = (e) => { try { return e.senderFrame.url.startsWith('file:'); } catch { return false; } };
+const tools = require('./tools')({ getChat: () => chat, fromSite, rd, wr });
 
 // ---------------- 登录窗口 ----------------
 function createLogin() {
@@ -33,12 +34,14 @@ function createLogin() {
 }
 ipcMain.handle('cfg', async (e) => {
   if (!fromLocal(e)) return {};
-  try { return await (await fetch(API + '/config')).json(); } catch { return {}; }
+  // 用 Chromium 的网络栈（会走系统代理），并缓存一份，断网时登录页和悬浮球也能显示头像
+  try { const r = await net.fetch(API + '/config'); const j = await r.json(); if (r.ok) { wr('cfg.json', j); return j; } } catch {}
+  return rd('cfg.json', {});
 });
 ipcMain.handle('login', async (e, kind, name, pw) => {
   if (!fromLocal(e)) return { error: '被拒绝' };
   try {
-    const r = await fetch(`${API}/auth/${kind === 'register' ? 'register' : 'login'}`, {
+    const r = await net.fetch(`${API}/auth/${kind === 'register' ? 'register' : 'login'}`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, pw }),
     });
     const j = await r.json().catch(() => ({}));
@@ -68,7 +71,7 @@ function createOrb() {
   const wa = screen.getPrimaryDisplay().workArea;
   const pos = prefs.orb || { x: wa.x + wa.width - ORB - 30, y: wa.y + wa.height - ORB - 90 };
   orb = new BrowserWindow({
-    x: pos.x, y: pos.y, width: ORB, height: ORB, frame: false, transparent: true, resizable: false, hasShadow: false,
+    x: pos.x, y: pos.y, width: ORB, height: ORB, minWidth: 36, minHeight: 36, frame: false, transparent: true, resizable: false, hasShadow: false,
     alwaysOnTop: true, skipTaskbar: true, show: false, title: '大肥鱼',
     webPreferences: { preload: path.join(__dirname, 'ui.js'), contextIsolation: true, sandbox: true },
   });
@@ -79,10 +82,13 @@ function createOrb() {
 function createChat() {
   chat = new BrowserWindow({
     width: prefs.w, height: prefs.h, minWidth: 320, minHeight: 420, show: false, title: '大肥鱼', icon,
-    autoHideMenuBar: true, alwaysOnTop: prefs.top,
+    frame: false, maximizable: false, minimizable: false, fullscreenable: false, backgroundColor: '#ffffff', alwaysOnTop: prefs.top,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true, backgroundThrottling: false },
   });
   chat.setMenu(null);
+  chat.webContents.setVisualZoomLevelLimits(1, 1);              // 不要缩放
+  chat.webContents.on('zoom-changed', () => chat.webContents.setZoomLevel(0));
+  chat.webContents.on('before-input-event', (e, i) => { if ((i.control || i.meta) && ['+', '-', '=', '0'].includes(i.key)) e.preventDefault(); });
   chat.loadURL(SITE);
   chat.webContents.on('did-finish-load', applyCreds);
   // 只允许停留在你的网站，其他链接交给系统浏览器
@@ -136,6 +142,17 @@ ipcMain.handle('drag', (e, st) => {
 ipcMain.on('ping', (e) => { if (fromSite(e) && chat && !chat.isVisible() && orb) orb.webContents.send('badge', true); });
 ipcMain.on('menu', (e) => { if (fromLocal(e)) buildMenu().popup({ window: orb }); });
 
+function setOrbSize(n) {
+  if (!orb) return;
+  n = Math.max(36, Math.min(160, Math.round(n)));
+  const b = orb.getBounds(), cx = b.x + b.width / 2, cy = b.y + b.height / 2;
+  ORB = n; prefs.orbSize = n;
+  const x = Math.round(cx - n / 2), y = Math.round(cy - n / 2);
+  orb.setBounds({ x, y, width: n, height: n }); prefs.orb = { x, y }; savePrefs();
+}
+ipcMain.on('orbsize', (e, d) => { if (fromLocal(e)) setOrbSize(ORB + (d > 0 ? 4 : -4)); });   // 鼠标放在头像上滚轮调大小
+ipcMain.on('hide', (e) => { if (fromSite(e) && chat) chat.hide(); });
+
 function buildMenu() {
   const sizes = [['小', 360, 560], ['中', 420, 680], ['大', 520, 780], ['超大', 640, 880]];
   return Menu.buildFromTemplate([
@@ -149,6 +166,8 @@ function buildMenu() {
     { type: 'separator' },
     { label: '聊天窗口大小（也可以直接拖边缘）', submenu: sizes.map(([n, w, h]) => ({ label: `${n}  ${w}×${h}`, type: 'radio', checked: prefs.w === w && prefs.h === h, click: () => { prefs.w = w; prefs.h = h; savePrefs(); if (chat.isVisible()) placeChat(); } })) },
     { label: '始终置顶', type: 'checkbox', checked: prefs.top, click: (m) => { prefs.top = m.checked; savePrefs(); chat.setAlwaysOnTop(m.checked); } },
+    { label: '悬浮头像大小（鼠标放在头像上滚轮也能调）', submenu: [['小', 44], ['中', 64], ['大', 88], ['特大', 120]].map(([n, v]) => ({ label: `${n}  ${v}px`, type: 'radio', checked: ORB === v, click: () => setOrbSize(v) })) },
+    { label: '清除文件授权（她将只能访问工作区）', click: () => tools.clearRoots() },
     { label: '开机自启', type: 'checkbox', checked: app.getLoginItemSettings().openAtLogin, click: (m) => app.setLoginItemSettings({ openAtLogin: m.checked }) },
     { type: 'separator' },
     { label: acct ? `账号：${acct.acct}` : '游客模式', enabled: false },

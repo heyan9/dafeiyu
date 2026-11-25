@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('ui', {
   login: (kind, name, pw) => ipcRenderer.invoke('login', kind, name, pw),
   guest: () => ipcRenderer.invoke('guest'),
   drag: (st) => ipcRenderer.invoke('drag', st),
+  size: (d) => ipcRenderer.send('orbsize', d),
   menu: () => ipcRenderer.send('menu'),
   onBadge: (f) => ipcRenderer.on('badge', (_e, v) => f(v)),
 });

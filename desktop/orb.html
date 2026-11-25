@@ -2,11 +2,10 @@
 <html lang="zh-CN"><head><meta charset="utf-8">
 <style>
 html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden;user-select:none;-webkit-user-select:none}
-#o{position:absolute;inset:6px;border-radius:50%;cursor:pointer;transition:transform .5s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 6px 12px rgba(5,109,232,.38))}
-#o:hover{transform:scale(1.1)}#o:active{transform:scale(.9)}
-#i{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #fff;box-sizing:border-box;background:#EAF3FF;pointer-events:none;animation:fl 4s ease-in-out infinite}
-@keyframes fl{50%{transform:translateY(-2px) rotate(-3deg)}}
-.b #o::after{content:"";position:absolute;right:-2px;top:-2px;width:16px;height:16px;border-radius:50%;background:#F1475A;border:2px solid #fff;box-sizing:border-box;animation:pu 1.1s ease-in-out infinite}
+#o{position:absolute;inset:3px;border-radius:50%;cursor:pointer;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+#o:hover{transform:scale(1.06)}#o:active{transform:scale(.94)}
+#i{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;pointer-events:none}
+.b #o::after{content:"";position:absolute;right:-1px;top:-1px;width:14px;height:14px;border-radius:50%;background:#F1475A;border:2px solid #fff;box-sizing:border-box;animation:pu 1.1s ease-in-out infinite}
 @keyframes pu{50%{transform:scale(1.3)}}
 </style></head>
 <body><div id="o"><img id="i" alt=""></div>
@@ -22,5 +21,6 @@ o.addEventListener('pointerdown',e=>{
   o.onpointermove=()=>ui.drag('move');
   o.onpointerup=()=>{o.onpointermove=o.onpointerup=null;ui.drag('end')};
 });
+addEventListener('wheel',e=>{e.preventDefault();ui.size(e.deltaY<0?1:-1)},{passive:false});
 addEventListener('contextmenu',e=>{e.preventDefault();ui.menu()});
 </script></body></html>
