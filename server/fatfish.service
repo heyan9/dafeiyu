@@ -1,0 +1,13 @@
+[Unit]
+Description=FatFish backend
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/fatfish
+EnvironmentFile=/opt/fatfish/fatfish.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
