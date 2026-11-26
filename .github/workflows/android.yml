@@ -10,30 +10,64 @@ jobs:
   apk:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 17
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v4
+          java-version: '17'
+
+      # v4 修复了旧版 setup-android 请求已被 Google 删除的 tools 包的问题
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
         with:
-          gradle-version: 8.9
-      - name: 把网页和服务器地址装进 App（国内不用访问 GitHub Pages）
+          packages: 'platform-tools'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.9'
+
+      - name: Check and copy web assets
         run: |
+          set -e
+          test -f index.html || { echo "::error::根目录找不到 index.html"; exit 1; }
+          test -f desktop/config.json || { echo "::error::找不到 desktop/config.json"; exit 1; }
           mkdir -p android/app/src/main/assets/site
           cp index.html android/app/src/main/assets/site/index.html
           cp desktop/config.json android/app/src/main/assets/config.json
-      - name: 下载唤醒词模型（Vosk 中文小模型，约 40MB）
+
+      - name: Download Chinese Vosk model
         run: |
-          curl -fL -o model.zip https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip
+          set -e
+          curl -fL --retry 3 --retry-delay 3 \
+            -o model.zip \
+            https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip
           unzip -q model.zip
+          test -d vosk-model-small-cn-0.22 || {
+            echo "::error::Vosk 模型压缩包解压后没有找到预期目录"
+            exit 1
+          }
+          mkdir -p android/app/src/main/assets
+          rm -rf android/app/src/main/assets/model-cn
           mv vosk-model-small-cn-0.22 android/app/src/main/assets/model-cn
-          rm model.zip
-      - name: 编译 APK
+          rm -f model.zip
+
+      - name: Build APK
         working-directory: android
-        run: gradle assembleDebug --no-daemon
-      - uses: softprops/action-gh-release@v2
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Verify APK
+        run: |
+          test -f android/app/build/outputs/apk/debug/app-debug.apk || {
+            echo "::error::APK 未生成，请查看上面的 Gradle 编译日志"
+            exit 1
+          }
+
+      - name: Publish APK release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: android-${{ github.run_number }}
           name: "大肥鱼安卓版 #${{ github.run_number }}"
