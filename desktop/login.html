@@ -40,8 +40,8 @@ button:active{transform:scale(.94)}
 <script>
 const WH="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23EAF3FF'/%3E%3Cpath d='M46 26c0-7-5-10-4-16M53 26c1-6 6-7 8-13' stroke='%237DB4FF' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 56c0-18 14-30 33-30 12 0 22 6 27 15 5-1 9-5 11-11 1 9-3 16-9 20 0 17-14 28-31 28C27 78 12 70 12 56z' fill='%23056DE8'/%3E%3Cpath d='M20 62c7 10 20 14 34 11 10-2 16-7 19-13-13 6-34 5-53 2z' fill='%23CFE3FF'/%3E%3Ccircle cx='33' cy='50' r='3.6' fill='%23fff'/%3E%3Ccircle cx='33.8' cy='50' r='1.7' fill='%230B2A5B'/%3E%3Ccircle cx='27' cy='57' r='3.2' fill='%237DB4FF' opacity='.75'/%3E%3C/svg%3E";
 const $=id=>document.getElementById(id);
-$('av').src=WH;
-ui.cfg().then(c=>{if(c&&c.avatar)$('av').src=c.avatar;if(c&&c.name)$('nm').textContent=c.name}).catch(()=>{});
+$('av').style.opacity=0;$('av').style.transition='opacity .4s';const showA=s=>{$('av').src=s;$('av').style.opacity=1};setTimeout(()=>{if(!$('av').getAttribute('src'))showA(WH)},4000);
+ui.cfg().then(c=>{if(c&&c.avatar)showA(c.avatar);if(c&&c.name)$('nm').textContent=c.name}).catch(()=>{});
 $('bg').innerHTML=Array.from({length:7},(_,i)=>`<i style="left:${(i*15+5)%95}%;width:${22+i*8%30}px;height:${22+i*8%30}px;animation-duration:${14+i*3}s;animation-delay:-${i*2.4}s"></i>`).join('');
 async function go(kind){
   const n=$('u').value.trim(),p=$('p').value;

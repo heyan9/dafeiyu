@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld('ui', {
   drag: (st) => ipcRenderer.invoke('drag', st),
   size: (d) => ipcRenderer.send('orbsize', d),
   menu: () => ipcRenderer.send('menu'),
+  onAvatar: (f) => ipcRenderer.on('avatar', (_e, a) => f(a)),
   onBadge: (f) => ipcRenderer.on('badge', (_e, v) => f(v)),
 });

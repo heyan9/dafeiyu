@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('desktop', {
   info: () => ipcRenderer.invoke('info'),
   hide: () => ipcRenderer.send('hide'),
   ping: () => ipcRenderer.send('ping'),
+  avatar: (a) => ipcRenderer.send('avatar', a),
 });
 
 // 拖进来 / 粘贴进来的文件：拿到真实路径后通知网页（没有路径的剪贴板图片会先存进工作区）

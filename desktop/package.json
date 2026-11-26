@@ -11,7 +11,7 @@
     "appId": "com.fatfish.desktop",
     "productName": "大肥鱼",
     "artifactName": "FatFish-${os}-${arch}.${ext}",
-    "files": ["main.js", "tools.js", "preload.js", "ui.js", "login.html", "orb.html", "config.json", "icon.png"],
+    "files": ["main.js", "tools.js", "preload.js", "ui.js", "login.html", "orb.html", "config.json", "icon.png", "site/**"],
     "win": { "target": "nsis", "icon": "icon.png" },
     "mac": { "target": "dmg", "icon": "icon.png", "category": "public.app-category.lifestyle" }
   }

@@ -6,6 +6,11 @@ const CFG = require('./config.json');
 const API = (CFG.api || '').replace(/\/$/, '');
 const SITE = CFG.url || '';
 const ORIGIN = (() => { try { return new URL(SITE).origin; } catch { return ''; } })();
+// 打包时会把网页一起装进应用（site/index.html）：这样不依赖 GitHub Pages，国内也能打开界面
+const { pathToFileURL } = require('url');
+const LOCAL = path.join(__dirname, 'site', 'index.html');
+const USE_LOCAL = fs.existsSync(LOCAL);
+const LOCAL_HREF = pathToFileURL(LOCAL).href;
 const U = (f) => path.join(app.getPath('userData'), f);
 const rd = (f, d) => { try { return JSON.parse(fs.readFileSync(U(f), 'utf8')); } catch { return d; } };
 const wr = (f, v) => { try { fs.writeFileSync(U(f), JSON.stringify(v)); } catch {} };
@@ -18,7 +23,7 @@ let ORB = Math.max(36, Math.min(160, prefs.orbSize || 64));
 let loginWin, orb, chat, tray, quitting = false;
 
 if (!app.requestSingleInstanceLock()) app.quit();
-const fromSite = (e) => { try { return new URL(e.senderFrame.url).origin === ORIGIN; } catch { return false; } };
+const fromSite = (e) => { try { return USE_LOCAL ? e.senderFrame.url.startsWith(LOCAL_HREF) : new URL(e.senderFrame.url).origin === ORIGIN; } catch { return false; } };
 const fromLocal = (e) => { try { return e.senderFrame.url.startsWith('file:'); } catch { return false; } };
 const tools = require('./tools')({ getChat: () => chat, fromSite, rd, wr });
 
@@ -89,11 +94,12 @@ function createChat() {
   chat.webContents.setVisualZoomLevelLimits(1, 1);              // 不要缩放
   chat.webContents.on('zoom-changed', () => chat.webContents.setZoomLevel(0));
   chat.webContents.on('before-input-event', (e, i) => { if ((i.control || i.meta) && ['+', '-', '=', '0'].includes(i.key)) e.preventDefault(); });
-  chat.loadURL(SITE);
+  if (USE_LOCAL) chat.loadFile(LOCAL, { query: { api: API } });
+  else chat.loadURL(SITE + (SITE.includes('?') ? '&' : '?') + 'api=' + encodeURIComponent(API));
   chat.webContents.on('did-finish-load', applyCreds);
   // 只允许停留在你的网站，其他链接交给系统浏览器
   chat.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' }; });
-  chat.webContents.on('will-navigate', (e, url) => { try { if (new URL(url).origin !== ORIGIN) { e.preventDefault(); shell.openExternal(url); } } catch {} });
+  chat.webContents.on('will-navigate', (e, url) => { try { const ok = USE_LOCAL ? url.startsWith(LOCAL_HREF) : new URL(url).origin === ORIGIN; if (!ok) { e.preventDefault(); shell.openExternal(url); } } catch {} });
   chat.on('close', (e) => { if (!quitting) { e.preventDefault(); chat.hide(); } });
   let t;
   chat.on('resize', () => { clearTimeout(t); t = setTimeout(() => { if (chat && !chat.isDestroyed()) { const [w, h] = chat.getSize(); prefs.w = w; prefs.h = h; savePrefs(); } }, 400); });
@@ -151,6 +157,12 @@ function setOrbSize(n) {
   orb.setBounds({ x, y, width: n, height: n }); prefs.orb = { x, y }; savePrefs();
 }
 ipcMain.on('orbsize', (e, d) => { if (fromLocal(e)) setOrbSize(ORB + (d > 0 ? 4 : -4)); });   // 鼠标放在头像上滚轮调大小
+// 网页加载到头像后，顺手缓存并推给悬浮球（这样悬浮球永远和聊天里的统一头像一致）
+ipcMain.on('avatar', (e, a) => {
+  if (!fromSite(e) || typeof a !== 'string' || !a.startsWith('data:image/') || a.length > 300000) return;
+  const c = rd('cfg.json', {}); c.avatar = a; wr('cfg.json', c);
+  if (orb && !orb.isDestroyed()) orb.webContents.send('avatar', a);
+});
 ipcMain.on('hide', (e) => { if (fromSite(e) && chat) chat.hide(); });
 
 function buildMenu() {
@@ -282,10 +294,10 @@ ipcMain.handle('act', async (e, a) => {
 });
 
 app.whenReady().then(() => {
-  if (!ORIGIN || SITE.includes('你的')) { dialog.showErrorBox('还没设置网站地址', '请打开 config.json，把 url 改成你的大肥鱼网址（GitHub Pages 地址）'); app.quit(); return; }
+  if (!USE_LOCAL && (!ORIGIN || SITE.includes('你的'))) { dialog.showErrorBox('还没设置网站地址', '请打开 config.json，把 url 改成你的大肥鱼网址（GitHub Pages 地址）'); app.quit(); return; }
   // 只给你的网站开放麦克风和通知（语音通话要用）
   session.defaultSession.setPermissionRequestHandler((wc, perm, cb, d) => {
-    let same = false; try { same = new URL(d.requestingUrl).origin === ORIGIN; } catch {}
+    let same = false; try { same = USE_LOCAL ? d.requestingUrl.startsWith(LOCAL_HREF) : new URL(d.requestingUrl).origin === ORIGIN; } catch {}
     cb(same && (perm === 'media' || perm === 'notifications'));
   });
   if (acct || prefs.guest) startMain(); else createLogin();
