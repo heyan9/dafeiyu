@@ -28,6 +28,11 @@ jobs:
           R: ${{ github.event.repository.name }}
         run: |
           node -e "const f=require('./config.json'),o=process.env.O,r=process.env.R;f.url='https://'+o+'.github.io/'+(r.toLowerCase()===o.toLowerCase()+'.github.io'?'':r+'/');require('fs').writeFileSync('config.json',JSON.stringify(f,null,2));console.log(f)"
+      - name: 把网页装进应用（国内不用访问 GitHub Pages）
+        shell: bash
+        run: |
+          mkdir -p site
+          cp ../index.html site/index.html
       - run: npm install
       - name: 打包 Windows
         if: runner.os == 'Windows'

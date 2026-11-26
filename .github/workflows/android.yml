@@ -1,0 +1,41 @@
+name: 打包安卓版
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - name: 把网页和服务器地址装进 App（国内不用访问 GitHub Pages）
+        run: |
+          mkdir -p android/app/src/main/assets/site
+          cp index.html android/app/src/main/assets/site/index.html
+          cp desktop/config.json android/app/src/main/assets/config.json
+      - name: 下载唤醒词模型（Vosk 中文小模型，约 40MB）
+        run: |
+          curl -fL -o model.zip https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip
+          unzip -q model.zip
+          mv vosk-model-small-cn-0.22 android/app/src/main/assets/model-cn
+          rm model.zip
+      - name: 编译 APK
+        working-directory: android
+        run: gradle assembleDebug --no-daemon
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-${{ github.run_number }}
+          name: "大肥鱼安卓版 #${{ github.run_number }}"
+          make_latest: false
+          files: android/app/build/outputs/apk/debug/app-debug.apk
